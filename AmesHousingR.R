@@ -6,12 +6,15 @@ plot(MyData$Year.Built, MyData$SalePrice, xlab="Year Built", ylab="Sale Pirce", 
 linearMod <- lm(MyData$SalePrice ~ MyData$Year.Built, data=MyData)  # build linear regression model on full data
 abline(lm(MyData$SalePrice ~ MyData$Year.Built, data=MyData) , col="red")
 summary(linearMod)
+mean(linearMod$residuals)
+
+
 
 #----- Year Remod  / Sale Price
 plot(MyData$Year.Remod.Add, MyData$SalePrice, xlab="Year Built", ylab="Sale Pirce", main="Year Remod  / Sale Price")
-linearMod <- lm(MyData$SalePrice ~ MyData$Year.Remod.Add, data=MyData)  # build linear regression model on full data
-abline(lm(MyData$SalePrice ~ MyData$Year.Remod.Add, data=MyData) , col="red")
-summary(linearMod)
+linearMod2 <- lm(MyData$SalePrice ~ MyData$Year.Remod.Add, data=MyData)  # build linear regression model on full data
+data=MyData) , col="red")
+summary(linearMod2)
 
 #-----Failure of an exponential linear model
 exponential.model <- lm(log(MyData$SalePrice) ~ MyData$Year.Built)
@@ -37,6 +40,8 @@ abline(linearMod2, col="blue")
 #Bar plot on the bathroom 
 barplot(height=MyData$SalePrice, width=MyData$Full.Bath, main="Car Distribution")
 
+# Scatter plot function on salesprice
+scatter.smooth(x=MyData$Year.Built, y=MyData$SalePrice, main="Sales Price ~ Year Built", col="red")
 
 
 
