@@ -1,3 +1,4 @@
+library(ggplot2)
 getwd()
 MyData <- read.csv(file='Desktop/STA4102Project/STA4102_Project/Data/AmesHousing.csv')
 
@@ -23,25 +24,30 @@ cor(MyData$Year.Built, MyData$SalePrice)
 
 
 par(mfrow=c(1, 2))  # divide graph area in 2 columns
-plot(density(MyData$Year.Built), main="Density Plot: Year Built", ylab="Frequency", sub=paste("Skewness:", round(MyData$Year.Built, 2)))  # density plot for 'speed'
-polygon(density(MyData$Year.Built), col="red")
-plot(density(MyData$SalePrice), main="Density Plot: Sale Price", ylab="Frequency", sub=paste("Skewness:", round(MyData$SalePrice, 2)))  # density plot for 'dist'
-polygon(density(MyData$SalePrice), col="red")
+#plot(density(MyData$Year.Built), main="Density Plot: Year Built", ylab="Frequency", sub=paste("Skewness:", round(MyData$Year.Built, 2)))  # density plot for 'speed'
+#polygon(density(MyData$Year.Built), col="red")
+#plot(density(MyData$SalePrice), main="Density Plot: Sale Price", ylab="Frequency", sub=paste("Skewness:", round(MyData$SalePrice, 2)))  # density plot for 'dist'
+#polygon(density(MyData$SalePrice), col="red")
 
 Regression <- lm(MyData$SalePrice ~ MyData$Year.Built +MyData$Year.Remod.Add)
 
 summary(Regression)
 
-cor(Regression)
-qqnorm(rstandard(Regression))
-qqline(rstandard(Regression))
+#cor(Regression)
 
-s.test <- shapiro.test(residuals(Regression))
-print(s.test)
+#qqnorm(rstandard(Regression))
+#qqline(rstandard(Regression))
 
-s1.test <- shapiro.test(residuals(MyData$logSale))
+#s.test <- shapiro.test(residuals(Regression))
+#print(s.test)
 
-print(s1.test)
+#s1.test <- shapiro.test(residuals(MyData$logSale))
+
+#print(s1.test)
 
 # look at dist of each variable, and try to take the log or exp transformation of the distribution
 
+
+boxplot(MyData$SalePrice~MyData$MS.Zoning,xlab="Zoning", ylab="Sale Pirce", main="Zoning  / Sale Price")
+
+ggplot()
