@@ -14,10 +14,13 @@ options(scipen = 999)
 # Useful functions  
 library(tidyverse)
 
+# Path Information 
+path_dirty = "~/School_Work/F19/CPSD/Group_Proj/STA4102_Project/Data/AmesHousing.csv"
+path_clean = "~/School_Work/F19/CPSD/Group_Proj/STA4102_Project/Data/cleaned_data.csv"
 #Import Data
-ames.dirty <- read.csv("~/School_Work/F19/CPSD/Group_Proj/STA4102_Project/Data/AmesHousing.csv")
+ames.dirty <- read.csv(path_dirty)
 
-ames.clean <-read.csv("~/School_Work/F19/CPSD/Group_Proj/STA4102_Project/Data/cleaned_data.csv")
+ames.clean <-read.csv(path_clean)
 
 ```
 
@@ -66,10 +69,71 @@ Now we will look at the numeric columns specifically.
 # Grab all the numeric columns 
 
 # Find the columns which are numeric 
-numeric_cols <- sapply(a, is.numeric)
+numeric_cols <- sapply(ames.clean, is.numeric)
 
 #Now store the numeric columns as its own list 
-clean_numeric <- ames.table[,numeric_cols]
+clean_numeric <- ames.clean[,numeric_cols]
 
+# Print column names 
+colnames(clean_numeric)
+```
+Description of the numeric columns: 
+
+1. X - Need to drop useless index variable 
+2. Order - Index variable of original dataset 
+3. PID (Nominal): Parcel identification number  - can be used with city web site for parcel review. 
+4. MS SubClass (Nominal): Identifies the type of dwelling involved in the sale.	
+5. Lot Frontage (Continuous): Linear feet of street connected to property
+6. Lot Area (Continuous): Lot size in square feet
+7. Overall Qual (Ordinal): Rates the overall material and finish of the house
+8. Overall Cond (Ordinal): Rates the overall condition of the house
+9. Year Built (Discrete): Original construction date
+10. Year Remod/Add (Discrete): Remodel date (same as construction date if no remodeling or additions)
+11. Mas Vnr Area (Continuous): Masonry veneer area in square feet
+12. BsmtFin SF 1 (Continuous): Type 1 finished square feet
+13. BsmtFin SF 2 (Continuous): Type 2 finished square feet
+14. Bsmt Unf SF (Continuous): Unfinished square feet of basement area
+15. Total Bsmt SF (Continuous): Total square feet of basement area
+16. 1st flr sf (continuous): first floor square feet
+17. 2nd Flr SF (Continuous)	: Second floor square feet
+18. Low Qual Fin SF (Continuous): Low quality finished square feet (all floors)
+19. Gr Liv Area (Continuous): Above grade (ground) living area square feet
+20.
+21. Bsmt Half Bath (Discrete): Basement half bathrooms
+22. Full Bath (Discrete): Full bathrooms above grade
+23. Half Bath (Discrete): Half baths above grade
+24. Bedroom (Discrete): Bedrooms above grade (does NOT include basement bedrooms)
+25. Kitchen (Discrete): Kitchens above grade
+26. TotRmsAbvGrd	(Discrete): Total rooms above grade (does not include bathrooms)
+27. Fireplaces (Discrete): Number of fireplaces
+28. Garage Yr Blt (Discrete): Year garage was built
+29. Garage Cars (Discrete): Size of garage in car capacity
+30. Garage Area (Continuous): Size of garage in square feet
+31. Wood Deck SF (Continuous): Wood deck area in square feet
+32. Open Porch SF (Continuous): Open porch area in square feet
+33. Enclosed Porch (Continuous): Enclosed porch area in square feet
+34. 3-Ssn Porch (Continuous): Three season porch area in square feet
+35. Screen Porch (Continuous): Screen porch area in square feet
+36. Pool Area (Continuous): Pool area in square feet
+37. Misc Val (Continuous): $Value of miscellaneous feature
+38. Mo Sold (Discrete): Month Sold (MM)
+39. Yr Sold (Discrete): Year Sold (YYYY)
+40. SalePrice (Continuous): Sale price 
+ 
+
+
+
+
+```{r}
+# Lets fit a linear regression to all the numeric columns 
+Regression <- lm(SalePrice ~., data=clean_numeric)
+summary(Regression)
+```
+```{r}
+qqnorm(rstandard(Regression))
+qqline(rstandard(Regression))
+
+s.text <- shapiro.test(residuals(Regression))
+print(s.text)
 ```
 
