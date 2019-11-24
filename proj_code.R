@@ -101,6 +101,13 @@ Regression <- lm(ames.copy$SalePrice ~ ames.copy$Year.Built +ames.copy$Year.Remo
 
 summary(Regression)
 
+qqnorm(rstandard(Regression))
+qqline(rstandard(Regression))
+
+s.test <- shapiro.test(residuals(Regression))
+print(s.test)
+
+
 plot(ames.copy$Lot.Frontage, ames.copy$SalePrice, xlab="Lot Frontage", ylab="Sale Pirce", main="ames.copy Lot Frontage  / Sale Price")
 
 ggplot(data=ames.copy, aes(x=ames.copy$Neighborhood, y=ames.copy$SalePrice)) + geom_boxplot()
