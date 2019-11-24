@@ -1,0 +1,75 @@
+---
+title: "Housing Data Analysis"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+# Deals with Scientific notation in Plots 
+options(scipen = 999)
+
+# Useful functions  
+library(tidyverse)
+
+#Import Data
+ames.dirty <- read.csv("~/School_Work/F19/CPSD/Group_Proj/STA4102_Project/Data/AmesHousing.csv")
+
+ames.clean <-read.csv("~/School_Work/F19/CPSD/Group_Proj/STA4102_Project/Data/cleaned_data.csv")
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+```{r}
+fig1 <- ggplot(data = ames.dirty) + 
+  geom_histogram(mapping = aes(x = ames.dirty$SalePrice )) +
+  ggtitle("Uncleaned")
+fig2 <- ggplot(data = ames.clean) + 
+  geom_histogram(mapping = aes(x = ames.clean$SalePrice)) + 
+  ggtitle("Cleaned")
+cowplot::plot_grid(fig1, fig2)
+```
+
+Now we will continue our analysis using only the clean version of the dataset.
+First we will look for any outliers
+```{r}
+na_count <-sapply(ames.clean, function(y) sum(is.na(y)))
+print("Sum of the NA values in each column: ")
+na_count
+```
+
+From the above output we can see that some of our columns contain a lot of missing values. 
+We have some missing values, namely: 
+
+* Lot Frontage (Continuous): Linear feet of street connected to property
+    + All of the porperty touching the street. 
+* Alley (Nominal): Type of alley access to property
+    +  Grvl	Gravel
+    +  Pave	Paved
+    +  NA 	No alley access
+
+
+```{r}
+# Store location of NA values for Lot.Frontage 
+na_frontage <- is.na(ames.clean$Lot.Frontage)
+ames.clean[na_frontage,]
+```
+
+
+Now we will look at the numeric columns specifically.
+```{r}
+# Grab all the numeric columns 
+
+# Find the columns which are numeric 
+numeric_cols <- sapply(a, is.numeric)
+
+#Now store the numeric columns as its own list 
+clean_numeric <- ames.table[,numeric_cols]
+
+```
+
