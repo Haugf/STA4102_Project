@@ -197,9 +197,24 @@ copy_numeric <-select(copy_numeric, -one_of(c("Total.Bsmt.SF", "Gr.Liv.Area")))
 
 length(copy_numeric)
 ```
-Refit the model: 
+Fit the model: 
 ```{r}
 Regression2 <- lm(SalePrice ~., data=copy_numeric)
 summary(Regression2)
+```
+```{r}
+# Stepwise Regression 
+# Can't preform stepwise regression with missing values, should we just omit them?
+na_omit_copy_numeric <-na.omit(copy_numeric)
+omit_regression <- lm(SalePrice ~., data=na_omit_copy_numeric)
+first_step <- MASS::stepAIC(omit_regression, direction = "both", trace = FALSE)
+summary(first_step)
+```
+```{r}
+# Analysis of residuals 
+qqnorm(rstandard(first_step))
+qqline(rstandard(first_step))
+s.text <- shapiro.test(residuals(first_step))
+print(s.text)
 ```
 
