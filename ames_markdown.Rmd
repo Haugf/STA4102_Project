@@ -121,21 +121,6 @@ Description of the numeric columns:
 40. SalePrice (Continuous): Sale price 
  
 
-
-
-
-```{r}
-# Lets fit a linear regression to all the numeric columns 
-Regression <- lm(SalePrice ~., data=clean_numeric)
-summary(Regression)
-```
-```{r}
-qqnorm(rstandard(Regression))
-qqline(rstandard(Regression))
-
-s.text <- shapiro.test(residuals(Regression))
-print(s.text)
-```
 We need to drop some irrelevant columns, lets first copy our data frame. 
 ```{r}
 # Copy clean data frame 
@@ -146,15 +131,22 @@ copy_numeric <- data.frame(clean_numeric)
 # the above should return false 
 
 # Drop "X" and "Order" as they are meaningless
-copy_numeric <-select(copy_numeric, -one_of(c("X","Order")))
+copy_numeric <-select(copy_numeric, -one_of(c("X","Order","PID")))
 
 copy_numeric
 ```
 
 Now we will fit the full linear model 
 ```{r}
-Regression2 <- lm(SalePrice ~., data=copy_numeric)
+Regression <- lm(SalePrice ~., data=copy_numeric)
 summary(Regression)
+```
+```{r}
+# Analysis of residuals 
+qqnorm(rstandard(Regression))
+qqline(rstandard(Regression))
+s.text <- shapiro.test(residuals(Regression))
+print(s.text)
 ```
 
 ```{r}
