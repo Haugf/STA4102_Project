@@ -136,4 +136,63 @@ qqline(rstandard(Regression))
 s.text <- shapiro.test(residuals(Regression))
 print(s.text)
 ```
+We need to drop some irrelevant columns, lets first copy our data frame. 
+```{r}
+# Copy clean data frame 
+copy_numeric <- data.frame(clean_numeric)
+
+# Check to see if we properly copied 
+#racemem(copy_numeric)==tracemem(clean_numeric)
+# the above should return false 
+
+# Drop "X" and "Order" as they are meaningless
+copy_numeric <-select(copy_numeric, -one_of(c("X","Order")))
+
+copy_numeric
+```
+
+Now we will fit the full linear model 
+```{r}
+Regression2 <- lm(SalePrice ~., data=copy_numeric)
+summary(Regression)
+```
+
+```{r}
+alias(Regression2)
+```
+From this output we can see that 
+
+1. BsmtFin.SF.1
+2. BsmtFin.SF.2
+3. Bsmt.Unf.SF
+
+are linearly dependent on Total.Bsmt.SF and 
+
+1. X1st.Flr.SF
+2. X2nd.Flr.SF
+3. Low.Qual.Fin.SF
+
+are linearly dependent on Gr.Liv.Area
+```{r}
+# Lets make a heatmap of the correlations 
+heat_vals <- c("SalePrice", "Total.Bsmt.SF", "BsmtFin.SF.1", "BsmtFin.SF.2",
+               "Bsmt.Unf.SF", "Gr.Liv.Area", "X1st.Flr.SF", "X2nd.Flr.SF",
+               "Low.Qual.Fin.SF")
+
+my_cor_vals <- select(copy_numeric, heat_vals)
+cormat <- round(cor(my_cor_vals),2)
+melted_cormat <- melt(cormat)
+melted_cormat
+
+# Plot heatmap 
+ggplot(data=melted_cormat, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-1,1), space = "Lab", 
+   name="Pearson\nCorrelation") +
+  theme_minimal()+ 
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()
+```
 
