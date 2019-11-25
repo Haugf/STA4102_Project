@@ -134,6 +134,7 @@ copy_numeric <- data.frame(clean_numeric)
 copy_numeric <-select(copy_numeric, -one_of(c("X","Order","PID")))
 
 copy_numeric
+length(copy_numeric)
 ```
 
 Now we will fit the full linear model 
@@ -158,13 +159,13 @@ From this output we can see that
 2. BsmtFin.SF.2
 3. Bsmt.Unf.SF
 
-are linearly dependent on Total.Bsmt.SF and 
+and Total.Bsmt.SF are linearly dependent
 
 1. X1st.Flr.SF
 2. X2nd.Flr.SF
 3. Low.Qual.Fin.SF
 
-are linearly dependent on Gr.Liv.Area
+and Gr.Liv.Area are linearly dependent  
 ```{r}
 # Lets make a heatmap of the correlations 
 heat_vals <- c("SalePrice", "Total.Bsmt.SF", "BsmtFin.SF.1", "BsmtFin.SF.2",
@@ -186,5 +187,19 @@ ggplot(data=melted_cormat, aes(x=Var1, y=Var2, fill=value)) +
  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
     size = 12, hjust = 1))+
  coord_fixed()
+```
+
+Now we will remove the linearly dependent variables from our model and run stepwise 
+selection. 
+```{r}
+# Drop the two linearly dependent columns  
+copy_numeric <-select(copy_numeric, -one_of(c("Total.Bsmt.SF", "Gr.Liv.Area")))
+
+length(copy_numeric)
+```
+Refit the model: 
+```{r}
+Regression2 <- lm(SalePrice ~., data=copy_numeric)
+summary(Regression2)
 ```
 
