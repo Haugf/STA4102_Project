@@ -232,6 +232,16 @@ qqline(rstandard(first_step))
 s.text <- shapiro.test(residuals(first_step))
 print(s.text)
 
+# Regression of year build and year remoldedd 
+Regression <- lm(MyData$SalePrice ~ MyData$Year.Built +MyData$Year.Remod.Add)
+
+summary(Regression)
+qqnorm(rstandard(Regression))
+qqline(rstandard(Regression))
+
+s.test <- shapiro.test(residuals(Regression))
+print(s.test)
+
 
 
 
