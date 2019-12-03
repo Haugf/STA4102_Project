@@ -242,7 +242,16 @@ qqline(rstandard(Regression))
 s.test <- shapiro.test(residuals(Regression))
 print(s.test)
 
+# Extension of the above model 
+Regression <- lm(ames.copy$SalePrice ~ ames.copy$Year.Built +ames.copy$Year.Remod.Add+ames.copy$MS.Zoning)
 
+summary(Regression)
+
+qqnorm(rstandard(Regression))
+qqline(rstandard(Regression))
+
+s.test <- shapiro.test(residuals(Regression))
+print(s.test)
 
 
 
